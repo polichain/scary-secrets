@@ -1,60 +1,80 @@
-import React, { useState } from 'react';
-import { loginUser, uploadFile } from '../services/storachaService.tsx';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';  // Import the Link component
+import { loginUser, uploadFile, setLogCallback } from '../services/storachaService.tsx';
 
-const UploadForm = () => {
-  const [email, setEmail] = useState('');
-  const [file, setFile] = useState<File | null>(null); // Especificar File | null para o estado do arquivo
-  const [uploadMessage, setUploadMessage] = useState('');
+const UploadForm: React.FC = () => {
+  const [email, setEmail] = useState('');  // State for email
+  const [file, setFile] = useState<File | null>(null);  // State for file
+  const [uploadMessage, setUploadMessage] = useState('');  // State for upload messages
+  const [logMessages, setLogMessages] = useState<string[]>([]);  // State to track log messages
 
+  useEffect(() => {
+    // Set the log callback to display messages in the UI
+    setLogCallback((message: string) => {
+      setLogMessages((prevMessages) => [...prevMessages, message]);
+    });
+  }, []);
+
+  // Function to handle login
   const handleLogin = async () => {
-    try {
-      await loginUser(email);
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-    }
+    await loginUser(email);
   };
 
+  // Function to handle file upload
   const handleFileUpload = async () => {
-    try {
-      if (file) {
-        const cid = await uploadFile(file);
-        setUploadMessage(`Arquivo carregado com sucesso. CID: ${cid}`);
-      } else {
-        setUploadMessage('Por favor, selecione um arquivo.');
+    if (file) {
+      const cid = await uploadFile(file);
+      if (cid) {
+        setUploadMessage(`File uploaded successfully. CID: ${cid}`);
       }
-    } catch (error) {
-      console.error('Erro ao carregar o arquivo:', error);
-      setUploadMessage('Erro ao carregar o arquivo.');
+    } else {
+      setUploadMessage('Please select a file.');
     }
   };
 
+  // Function to handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     } else {
-      setFile(null); // Definir para null se nenhum arquivo for selecionado
+      setFile(null);
+      setLogMessages((prevMessages) => [...prevMessages, 'File selection cleared']);
     }
   };
 
   return (
     <div>
-      <h2>Upload de Arquivos Assustadores</h2>
+      <h2>Upload Scary Files</h2>
 
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Digite seu email"
+        placeholder="Enter your email"
       />
       <button onClick={handleLogin}>Login</button>
 
       <input
         type="file"
-        onChange={handleFileChange} // Usa a função handleFileChange
+        onChange={handleFileChange} 
       />
-      <button onClick={handleFileUpload}>Carregar Arquivo</button>
+      <button onClick={handleFileUpload}>Upload File</button>
 
+      {/* Show upload message */}
       {uploadMessage && <p>{uploadMessage}</p>}
+
+      {/* Show log messages to the user */}
+      <div>
+        <h3>Status:</h3>
+        {logMessages.map((message, index) => (
+          <p key={index}>{message}</p>
+        ))}
+      </div>
+
+      {/* Return to Landing Page */}
+      <Link to="/">
+        <button>Return to Landing Page</button>
+      </Link>
     </div>
   );
 };

@@ -1,87 +1,109 @@
 import { create } from '@web3-storage/w3up-client';
+import '../styles/main.css'; // Import the CSS file
 
 let client;
+let logCallback; // Callback function to send logs to the UploadForm
 
+// Set a callback to update log messages in the UploadForm
+export const setLogCallback = (callback) => {
+  logCallback = callback;
+};
+
+// Utility function to log both to console and to the UI
+const logMessage = (message) => {
+  console.log(message);
+  if (logCallback) {
+    logCallback(message);
+  }
+};
+
+// Initialize the client if it hasn't been created yet
 export const initializeClient = async () => {
   if (!client) {
     client = await create();
   }
 };
 
+// Login user with email
 export const loginUser = async (email) => {
   try {
     await initializeClient();
     await client.login(email);
-    console.log('Usuário logado com sucesso!');
+    logMessage('User logged in successfully!');
   } catch (error) {
-    console.error('Erro ao fazer login:', error);
+    logMessage(`Error during login: ${error}`);
   }
 };
 
+// Create a new space or use an existing one
 export const createOrUseSpace = async () => {
   try {
     await initializeClient();
     
-    // Verifica se já existe um espaço
+    // Check if there's an existing space
     const spaces = await client.spaces();
     let space;
 
     if (spaces.length === 0) {
-      // Se não existir, cria um novo espaço
+      // If no space exists, create a new one
       space = await client.createSpace('default-space');
       await client.setCurrentSpace(space.did());
-      console.log('Espaço criado e definido como atual.');
+      logMessage('Space created and set as current.');
     } else {
-      // Usa o primeiro espaço disponível
+      // Use the first available space
       space = spaces[0];
       await client.setCurrentSpace(space.did());
-      console.log('Espaço existente definido como atual.');
+      logMessage('Existing space set as current.');
     }
     
     return space;
   } catch (error) {
-    console.error('Erro ao criar ou usar o espaço:', error);
+    logMessage(`Error creating or using space: ${error}`);
   }
 };
 
+// Upload a file
 export const uploadFile = async (file) => {
   try {
     await initializeClient();
     await createOrUseSpace();
     
-    // Faz o upload do arquivo
+    // Upload the file
     const cid = await client.uploadFile(file);
-    console.log(`Arquivo carregado com sucesso. CID: ${cid}`);
+    logMessage(`File uploaded successfully. CID: ${cid}`);
     return cid;
   } catch (error) {
-    console.error('Erro ao carregar arquivo:', error);
+    logMessage(`Error uploading file: ${error}`);
   }
 };
+
+// Retrieve a file by its CID
 export const getFile = async (cid) => {
   try {
     const response = await fetch(`https://w3s.link/ipfs/${cid}`);
     if (!response.ok) {
-      throw new Error('Falha ao buscar o arquivo.');
+      throw new Error('Failed to fetch the file.');
     }
+    logMessage('File retrieved successfully.');
     return response;
   } catch (error) {
-    console.error('Erro ao buscar o arquivo:', error);
+    logMessage(`Error fetching file: ${error}`);
     throw error;
   }
 };
-// storachaService.tsx
 
+// Delegate upload permissions to another DID
 export const delegateUploadPermissions = async (toDid) => {
   try {
-    await initializeClient(); // Certifique-se de que o cliente está inicializado
-    const space = await createOrUseSpace(); // Usa o espaço já criado
+    await initializeClient(); // Ensure the client is initialized
+    const space = await createOrUseSpace(); // Use the already created space
     const delegation = await client.createDelegation(toDid, ['upload/add'], {
       with: space.did(),
     });
+    logMessage('Permissions delegated successfully.');
     return delegation;
   } catch (error) {
-    console.error('Erro ao delegar permissões de upload:', error);
+    logMessage(`Error delegating upload permissions: ${error}`);
     throw error;
   }
 };
-

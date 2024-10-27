@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { delegateUploadPermissions } from '../services/storachaService.tsx';
+import '../styles/main.css'; // Import the CSS file
 
 export const PermissionForm: React.FC = () => {
   const [toDid, setToDid] = useState<string>('');

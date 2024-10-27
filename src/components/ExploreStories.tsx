@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';  // Import the Link component
 import { getFile } from '../services/storachaService.tsx';
+import '../styles/main.css'; // Import the CSS file
 
 export const ExploreStories: React.FC = () => {
   const [cid, setCid] = useState<string>('');
@@ -33,6 +35,11 @@ export const ExploreStories: React.FC = () => {
         onChange={(e) => setCid(e.target.value)}
       />
       <button onClick={handleFetchStory}>Fetch Story</button>
+
+      {/* Return to Landing Page placed directly below the "Fetch Story" button */}
+      <Link to="/">
+        <button>Return to Landing Page</button>
+      </Link>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {storyContent && <p>{storyContent}</p>}

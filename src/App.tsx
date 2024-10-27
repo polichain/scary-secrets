@@ -13,7 +13,7 @@ const App: React.FC = () => {
         <Routes>
           {/* Set LandingPage as the default route */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/submit" element={<UploadForm />} />
+          <Route path="/upload" element={<UploadForm />} />
           <Route path="/permission" element={<PermissionForm />} />
           <Route path="/explore" element={<ExploreStories />} />
 

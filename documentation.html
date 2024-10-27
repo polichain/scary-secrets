@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scary Secrets Vault Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f7f7f7;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+        code {
+            background-color: #eee;
+            padding: 4px;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Scary Secrets Vault Documentation</h1>
+
+        <p><strong>Scary Secrets Vault</strong> is a decentralized web application created for the Halloween Hackathon, where users can share spooky stories and Halloween-themed files in a secure and decentralized way. The project leverages Storacha’s decentralized storage technologies and IPFS to manage files and Content Identifiers (CIDs), providing a fun and secure environment to explore Halloween content.</p>
+
+        <h2>Project Overview</h2>
+
+        <p>Scary Secrets Vault allows users to upload, explore, and view content related to Halloween, like spooky stories, images, or other files. The platform integrates with <strong>Storacha Network</strong> to ensure that files are stored in secure, decentralized spaces, while also allowing public access through IPFS. Users can interact with the platform via a user-friendly interface, and the platform takes care of the complexities of decentralized technologies.</p>
+
+        <h2>User Navigation</h2>
+
+        <p>The user flow is straightforward, offering a seamless experience for interacting with Halloween-themed content. Below is a typical user journey:</p>
+
+        <h3>1. Login</h3>
+        <p>Users start by logging in with their email addresses. The login system sends a verification email, and after confirmation, the user is authenticated.</p>
+
+        <h3>2. Uploading Spooky Content</h3>
+        <p>Once logged in, users can upload files, such as stories, images, or other Halloween-related content. The system automatically creates a space for the user to store their files securely. Each file is assigned a <strong>Content Identifier (CID)</strong> via IPFS, making the content publicly accessible if shared.</p>
+
+        <h3>3. Exploring Uploaded Stories</h3>
+        <p>Users can explore scary stories or other files by providing the CID of the desired content. The platform fetches the content from IPFS and displays it to the user. Users can also explore stories shared by others by entering the corresponding CID.</p>
+
+        <h3>4. Sharing Content</h3>
+        <p>After uploading a file, users receive a CID that can be shared with others, allowing public access to their content. Anyone with the CID can view the content through the platform.</p>
+
+        <h2>Purpose of the Project</h2>
+        <p>The Scary Secrets Vault was designed with a Halloween theme to encourage the sharing of spooky, creative content while using cutting-edge Web3 technologies. The platform provides a secure, decentralized solution for sharing content and introduces users to decentralized technologies, such as Storacha and IPFS, in a simple and engaging way.</p>
+
+        <h2>Technologies Used</h2>
+
+        <h3>Frontend</h3>
+        <ul>
+            <li><strong>React</strong>: Used for building the user interface. React’s component-based structure makes it scalable and easy to maintain.</li>
+            <li><strong>TypeScript</strong>: Provides static typing to enhance code quality, reducing runtime errors and improving the development process.</li>
+            <li><strong>CSS</strong>: Used for styling the application with a spooky, Halloween-themed look and feel.</li>
+        </ul>
+
+        <h3>Web3 & Decentralized Storage</h3>
+        <ul>
+            <li><strong>Storacha Network</strong>: The core decentralized storage solution used to manage the storage of files in secure, permissioned DID spaces. It ensures privacy and data sovereignty.</li>
+            <li><strong>IPFS (InterPlanetary File System)</strong>: Files are accessible through CIDs, which allow public sharing. The application uses IPFS to ensure that content is decentralized and accessible globally.</li>
+            <li><strong>Web3-Storage/W3UP Client</strong>: A library used to interface with Storacha and IPFS, enabling uploading, managing DID spaces, and creating delegations for other users.</li>
+        </ul>
+
+        <h2>How Technologies Were Used</h2>
+        <p>The Scary Secrets Vault integrates the following technologies from Storacha:</p>
+
+        <ul>
+            <li><strong>DID Spaces:</strong> Each user’s files are stored in a unique, decentralized DID space, providing secure storage for the content they upload. This ensures privacy and protection for all users' data.</li>
+            <li><strong>Content Identifiers (CIDs):</strong> For each file uploaded, a CID is generated using IPFS. This CID acts as a unique identifier for the file, which users can share with others to provide access.</li>
+            <li><strong>Decentralized File Management:</strong> Through the use of Storacha’s Web3 client libraries, the application manages file uploads, space creation, and CID generation without needing centralized infrastructure.</li>
+        </ul>
+
+        <h2>Project Setup and Running Locally</h2>
+
+        <h3>Prerequisites</h3>
+        <ul>
+            <li><strong>Node.js</strong> and <strong>npm/yarn</strong> installed on your machine.</li>
+            <li>A Storacha Network account for accessing decentralized storage.</li>
+        </ul>
+
+        <h3>Steps to Run Locally</h3>
+        <pre><code>
+# Clone the repository
+git clone https://github.com/polichain/scary-secrets.git
+cd scary-secrets
+
+# Install dependencies
+yarn install
+
+# Start the development server
+yarn start
+
+# Visit the application at http://localhost:3000
+        </code></pre>
+
+        <h2>Future Enhancements</h2>
+        <ul>
+            <li>Adding categorization for stories (e.g., Short Scares, Urban Legends).</li>
+            <li>Implementing user profiles to manage uploads, history, and interactions with others.</li>
+            <li>Enabling a dark mode switch for better user experience.</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>The Scary Secrets Vault is a fun, engaging platform that combines Halloween creativity with modern decentralized storage technologies. By using Storacha Network and IPFS, it offers a secure and decentralized way for users to share their spooky stories with the world.</p>
+    </div>
+
+</body>
+</html>
