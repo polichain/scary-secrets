@@ -1,70 +1,114 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Scary Secrets Vault 🎃👻
 
-## Available Scripts
+**Scary Secrets Vault** is a decentralized web application built to let users share their spooky stories and Halloween-themed files in a secure, decentralized way. The platform leverages **Storacha Network** to store files in decentralized DID spaces and **IPFS** to provide Content Identifiers (CIDs) that allow public sharing of these scary stories and files. Users can upload, explore, and view content related to Halloween, with a fully decentralized backend powered by Web3 technologies.
 
-In the project directory, you can run:
+## 📌 **Purpose**
+The main goal of Scary Secrets Vault is to create a themed platform for users to share spooky stories, Halloween art, and other scary content securely. By connecting to decentralized networks like **Storacha**, the project ensures that all files are stored in secure, permissioned DID spaces, which offers data sovereignty and privacy, while also making use of IPFS for decentralized public access.
 
-### `npm start`
+This project was created for a **Halloween Hackathon** and integrates the **Storacha Network**, fulfilling the requirement to utilize Storacha's decentralized storage technology.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🔧 **Technologies Used**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Frontend
+- **React**: A JavaScript library for building user interfaces. The app leverages **React** for its component-based architecture, making it scalable and easy to manage.
+- **TypeScript**: Provides static typing to improve code quality, catch errors early, and offer better development experience.
+- **React Router**: Handles routing in the app, allowing seamless navigation between the pages (e.g., landing page, upload form, and secret exploration).
+- **CSS Styling**: Custom CSS ensures a spooky, user-friendly UI with Halloween-themed colors and elements. The design is responsive and works well on both desktop and mobile.
 
-### `npm test`
+### Web3 & Decentralized Storage
+- **Storacha Network**: The core decentralized storage platform we’re using. It handles the secure storage of files in **DID (Decentralized Identifier)** spaces, allowing users to store their content in personal spaces that are cryptographically secure.
+- **IPFS (InterPlanetary File System)**: Files uploaded are accessible via unique Content Identifiers (CIDs). The app provides functionality to upload files and share them publicly through IPFS.
+- **Web3-Storage/W3UP Client**: A package used to interface with Storacha and IPFS. This allows us to upload files, manage DID spaces, and create delegations for other users.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Authentication & Permissions
+- **Email-Based Authentication**: Users log in using their email addresses. Upon login, they are sent an email to validate their session. Storacha then uses **UCAN (User Controlled Authorization Networks)** to handle permissions securely for accessing and uploading content to DID spaces.
+- **DID (Decentralized Identifier) Management**: Users can either create a new DID space to store their files or select from existing DID spaces they have access to. DID spaces provide a secure way to store files while managing access controls.
 
-### `npm run build`
+## 🖥️ **Features**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. **Login & Authentication**
+   - Users authenticate using their email address. Upon successful login, users receive an email confirmation to validate their session.
+   - The app uses **Storacha**'s built-in login system for decentralized authentication.
+   
+### 2. **Uploading Scary Content**
+   - Users can upload text, images, and other files (related to Halloween themes) into their **DID space** or **IPFS**.
+   - Before uploading, users must either create a new **DID space** or select an existing space from their account.
+   - Files are uploaded to the Storacha-backed storage with a **CID** (Content Identifier) that allows the file to be publicly accessible.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. **Exploring Stories**
+   - Users can explore scary stories and other files uploaded by others by entering the corresponding **CID** in the explorer.
+   - The app fetches the file from IPFS and displays its content.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. **DID Space Management**
+   - Users can create or select a DID space for managing their scary stories. All uploaded files are securely stored in their respective DID spaces.
+   - Delegation of DID spaces is possible, allowing other users to upload or access files in a shared space.
 
-### `npm run eject`
+### 5. **Content Sharing**
+   - Files uploaded are accessible by anyone with the corresponding **CID**, which makes it easy to share scary stories and other content with the world.
+   - Users can explore content that others have uploaded by entering the correct **CID** for any story.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ **How It Works**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **User Authentication**: 
+   - Users enter their email address and receive a verification email to log in.
+   - Once logged in, they can manage their DID spaces or upload files.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **Uploading Files**: 
+   - The user selects or creates a DID space.
+   - Files are uploaded to Storacha, which generates a CID for the content.
+   - The CID is stored in the user's account and can be used to share or access the content.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Fetching Files**: 
+   - Users can fetch content by entering the CID in the exploration page.
+   - The app retrieves the content from IPFS and displays it to the user.
 
-## Learn More
+## 🚀 **Running the Project Locally**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites
+- Node.js and npm/yarn installed on your machine.
+- A Storacha Network account.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Setup
 
-### Code Splitting
+1. **Clone the repository**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   ```bash
+   git clone https://github.com/polichain/scary-secrets.git
+   cd scary-secrets
+   ```
 
-### Analyzing the Bundle Size
+2. **Install dependencies**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   ```bash
+   yarn install
+   ```
 
-### Making a Progressive Web App
+3. **Start the development server**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   ```bash
+   yarn start
+   ```
 
-### Advanced Configuration
+4. **Visit the application** at `http://localhost:3000`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📝 **How to Contribute**
 
-### Deployment
+We welcome contributions! If you find a bug or want to propose a new feature, feel free to open an issue or create a pull request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+To contribute:
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/my-feature`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/my-feature`).
+5. Open a pull request.
 
-### `npm run build` fails to minify
+## 💡 **Future Enhancements**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Story Categorization**: Add categories like “Short Scares” or “Urban Legends.”
+- **User Profiles**: Allow users to manage their uploaded content, view their history, and interact with others.
+- **Dark Mode Toggle**: Implement a theme switcher to allow users to switch between dark and light modes.
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
