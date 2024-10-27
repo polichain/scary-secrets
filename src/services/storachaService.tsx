@@ -1,108 +1,87 @@
 import { create } from '@web3-storage/w3up-client';
 
-let client: any;  // Storacha client
+let client;
 
-// Initialize Storacha Client
-export async function initStoracha(): Promise<void> {
-  try {
-    client = await create();  // Create the client
-    console.log('Storacha client initialized');
-  } catch (error) {
-    console.error('Failed to initialize Storacha client:', error);
-  }
-}
-
-// Login User
-export async function login(email: string): Promise<boolean> {
+export const initializeClient = async () => {
   if (!client) {
-    await initStoracha();  // Ensure the client is initialized before login
+    client = await create();
   }
+};
 
+export const loginUser = async (email) => {
   try {
-    await client.login(email);  // Call login on the initialized client
-    console.log('Login successful, check your email to validate login.');
-    return true;
+    await initializeClient();
+    await client.login(email);
+    console.log('Usuário logado com sucesso!');
   } catch (error) {
-    console.error('Failed to login:', error);
-    return false;
+    console.error('Erro ao fazer login:', error);
   }
-}
+};
 
-
-// Set an existing DID as the current working space
-export async function setCurrentDID(did: string): Promise<void> {
+export const createOrUseSpace = async () => {
   try {
-    await client.setCurrentSpace(did);
-    console.log(`Successfully set current DID: ${did}`);
-  } catch (error) {
-    console.error('Failed to set current DID:', error);
-    throw error;
-  }
-}
+    await initializeClient();
+    
+    // Verifica se já existe um espaço
+    const spaces = await client.spaces();
+    let space;
 
-// Upload a file to the current DID space
-export async function uploadFile(file: File): Promise<string | void> {
-  try {
-    const currentSpace = client.getCurrentSpace();
-    if (!currentSpace) {
-      throw new Error('No current space set. Use createSpace() or setCurrentSpace() first.');
+    if (spaces.length === 0) {
+      // Se não existir, cria um novo espaço
+      space = await client.createSpace('default-space');
+      await client.setCurrentSpace(space.did());
+      console.log('Espaço criado e definido como atual.');
+    } else {
+      // Usa o primeiro espaço disponível
+      space = spaces[0];
+      await client.setCurrentSpace(space.did());
+      console.log('Espaço existente definido como atual.');
     }
+    
+    return space;
+  } catch (error) {
+    console.error('Erro ao criar ou usar o espaço:', error);
+  }
+};
 
+export const uploadFile = async (file) => {
+  try {
+    await initializeClient();
+    await createOrUseSpace();
+    
+    // Faz o upload do arquivo
     const cid = await client.uploadFile(file);
-    console.log(`File uploaded successfully! CID: ${cid}`);
+    console.log(`Arquivo carregado com sucesso. CID: ${cid}`);
     return cid;
   } catch (error) {
-    console.error('Failed to upload file:', error);
+    console.error('Erro ao carregar arquivo:', error);
+  }
+};
+export const getFile = async (cid) => {
+  try {
+    const response = await fetch(`https://w3s.link/ipfs/${cid}`);
+    if (!response.ok) {
+      throw new Error('Falha ao buscar o arquivo.');
+    }
+    return response;
+  } catch (error) {
+    console.error('Erro ao buscar o arquivo:', error);
     throw error;
   }
-}
+};
+// storachaService.tsx
 
-// UCAN Delegation (for permissions)
-export async function delegatePermissions(toDid: string): Promise<void> {
+export const delegateUploadPermissions = async (toDid) => {
   try {
-    const abilities = ['space/blob/add', 'upload/add'];
-    const expiration = Math.floor(Date.now() / 1000) + (60 * 60 * 24);  // Valid for 24 hours
-
-    const delegation = await client.createDelegation(toDid, abilities, { expiration });
-    console.log('Delegation created:', delegation);
-  } catch (error) {
-    console.error('Failed to delegate permissions using UCAN:', error);
-  }
-}
-
-// Retrieve the file by CID, handle images correctly
-export async function getFile(cid: string): Promise<Response | void> {
-  try {
-    const url = `https://w3s.link/ipfs/${cid}`;  // Replace with actual IPFS URL or Storacha integration
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch file');
-    }
-
-    return response;  // Return Response object
-  } catch (error) {
-    console.error('Failed to fetch file:', error);
-    return;  // Return void in case of error
-  }
-}
-
-// Delegate permissions to another DID (Decentralized Identifier)
-export async function delegateUploadPermissions(toDid: string): Promise<any> {
-  try {
-    if (!client) throw new Error('Client not initialized. Please call initStoracha first.');
-
-    const currentSpace = await client.getCurrentSpace();
-    if (!currentSpace) {
-      throw new Error('No current space set. Use createDID() or setCurrentSpace().');
-    }
-
-    const abilities = ['space/blob/add', 'upload/add'];  // Define the permissions
-    const expiration = Math.floor(Date.now() / 1000) + (60 * 60 * 24);  // 24 hours
-
-    const delegation = await client.createDelegation(toDid, abilities, { expiration });
+    await initializeClient(); // Certifique-se de que o cliente está inicializado
+    const space = await createOrUseSpace(); // Usa o espaço já criado
+    const delegation = await client.createDelegation(toDid, ['upload/add'], {
+      with: space.did(),
+    });
     return delegation;
   } catch (error) {
-    console.error('Failed to delegate upload permissions:', error);
+    console.error('Erro ao delegar permissões de upload:', error);
+    throw error;
   }
-}
+};
+

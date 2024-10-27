@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UploadForm } from './components/UploadForm.tsx';
+import UploadForm from './components/UploadForm.tsx';
 import { LandingPage } from './components/LandingPage.tsx';  // Import the LandingPage component
 import { PermissionForm } from './components/PermissionForm.tsx';  // Import the LandingPage component
 import { ExploreStories } from './components/ExploreStories.tsx';  // Import the LandingPage component
