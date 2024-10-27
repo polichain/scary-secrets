@@ -90,7 +90,7 @@ This project was created for a **Halloween Hackathon** and integrates the **Stor
    yarn start
    ```
 
-4. **Visit the application** at `https://scarysecrets.vercel.app/`.
+4. **Visit the application** at [ScarySecrets](https://scarysecrets.vercel.app)
 
 ## 📝 **How to Contribute**
 
