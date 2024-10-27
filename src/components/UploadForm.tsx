@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-import { initStoracha, createDID, uploadFile, login } from '../services/storachaService.tsx';
+import { login, uploadFile, setCurrentDID } from '../services/storachaService.tsx';
 
 export const UploadForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [cid, setCid] = useState<string | null>(null);
   const [email, setEmail] = useState<string>('');
-  const [spaceCreated, setSpaceCreated] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);  // Track login state
-  const [loading, setLoading] = useState<boolean>(false);  // Track loading state for actions
-  const [message, setMessage] = useState<string | null>(null);  // Message to the user
+  const [did, setDid] = useState<string | null>(null);
+  const [message, setMessage] = useState<string>('');
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  const handleLogin = async () => {
+    const success = await login(email);
+    if (success) {
+      setMessage('Login successful. Please check your email to validate.');
+      setLoggedIn(true);
+    } else {
+      setMessage('Failed to login. Please try again.');
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -16,79 +25,75 @@ export const UploadForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (file && spaceCreated) {
-      setLoading(true);
-      setMessage("Uploading your secret...");
-
-      const uploadedCid = await uploadFile(file);  // Upload file to Storacha
-
-      if (uploadedCid) {
-        setCid(uploadedCid);
-        setMessage(`File uploaded successfully! CID: ${uploadedCid}`);
-      } else {
-        setMessage("Failed to upload the file. Please try again.");
-      }
-      setLoading(false);
+  const handleCreateDID = async () => {
+    if (!did) {
+      setMessage('Please enter a DID.');
+      return;
+    }
+    try {
+      await setCurrentDID(did);
+      setMessage(`Current DID set to: ${did}`);
+    } catch (error) {
+      setMessage(`Failed to set DID: ${error.message}`);
     }
   };
 
-  const handleLogin = async () => {
-    if (!email.includes('@')) {
-      alert("Invalid email format. Please enter a valid email.");
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!file) {
+      setMessage('Please select a file to upload.');
       return;
     }
 
-    setLoading(true);
-    setMessage("Logging in...");
-
-    await initStoracha();  // Initialize Storacha client
-
-    const userHasAccount = await login(email);  // Check if the user has a Storacha account
-    if (!userHasAccount) {
-      setMessage("You don't have an account on Storacha. Please sign up at storacha.network before proceeding.");
-      setLoading(false);
+    if (!did) {
+      setMessage('Please create or select a DID before uploading.');
       return;
     }
 
-    setMessage("Login successful. Creating DID...");
-    const didCreated = await createDID(email);  // Ensure the DID is created
-    if (didCreated) {
-      setSpaceCreated(true);
-      setIsLoggedIn(true);
-      setMessage("DID created successfully. You can now upload files.");
-    } else {
-      setMessage('Failed to create a DID');
+    try {
+      await setCurrentDID(did);  // Set the current DID before uploading
+      const uploadedCid = await uploadFile(file);
+      setMessage(`File uploaded successfully! CID: ${uploadedCid}`);
+    } catch (error) {
+      setMessage(`Failed to upload file: ${error.message}`);
     }
-    setLoading(false);
   };
 
   return (
     <div>
-      <h2>Submit Your Scary Secret!</h2>
-      <input
-        type="email"
-        placeholder="Enter your email to login"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        disabled={isLoggedIn}  // Disable input if already logged in
-      />
-      {!isLoggedIn && <button onClick={handleLogin} disabled={loading}>Login with Email</button>}
-
-      {isLoggedIn && spaceCreated && (
+      <h2>Share Your Scary Story</h2>
+      {loggedIn ? (
         <>
+          <div>
+            <input
+              type="text"
+              placeholder="Enter your DID"
+              value={did || ''}
+              onChange={(e) => setDid(e.target.value)}
+            />
+            <button onClick={handleCreateDID}>Create/Set DID</button>
+          </div>
+
           <form onSubmit={handleSubmit}>
-            <input type="file" onChange={handleFileChange} disabled={loading} />
-            <button type="submit" disabled={loading}>Submit</button>
+            <input type="file" onChange={handleFileChange} />
+            <button type="submit">Upload File</button>
           </form>
-          {cid && <p>Secret CID: {cid}</p>}
+
+          {cid && <p>File uploaded successfully! CID: {cid}</p>}
+        </>
+      ) : (
+        <>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <button onClick={handleLogin}>Login</button>
         </>
       )}
 
-      {/* Show messages and loading indicator */}
       {message && <p>{message}</p>}
-      {loading && <p>Loading...</p>}
     </div>
   );
 };
