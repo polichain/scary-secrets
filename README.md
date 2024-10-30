@@ -106,8 +106,7 @@ To contribute:
 ## 💡 **Future Enhancements**
 
 - **Story Categorization**: Add categories like “Short Scares” or “Urban Legends.”
-- **User Profiles**: Allow users to manage their uploaded content, view their history, and interact with others.
-- **Dark Mode Toggle**: Implement a theme switcher to allow users to switch between dark and light modes.
+- **User Profiles**: Allow users to manage their uploaded content, view their history, and interact with others with email and metamask.
 
 ## 📄 **License**
 
